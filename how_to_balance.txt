@@ -1,0 +1,62 @@
+func (n *Node) rotateLeft() *Node {
+	fmt.Println("rotateLeft " + n.Value)
+Save n’s right child in r.	
+	r := n.Right
+Move r’s right subtree to the left of n.	
+	n.Right = r.Left
+Then, make n the left child of r.	
+	r.Left = n
+Finally, re-calculate the heights of n and r.	
+	n.height = max(n.Left.Height(), n.Right.Height()) + 1
+	r.height = max(r.Left.Height(), r.Right.Height()) + 1
+Return the new top node of this part of the tree.	
+	return r
+}
+
+rotateRight is the mirrored version of rotateLeft.	
+func (n *Node) rotateRight() *Node {
+	fmt.Println("rotateRight " + n.Value)
+	l := n.Left
+	n.Left = l.Right
+	l.Right = n
+	n.height = max(n.Left.Height(), n.Right.Height()) + 1
+	l.height = max(l.Left.Height(), l.Right.Height()) + 1
+	return l
+}
+
+rotateRightLeft first rotates the right child of c to the right, then c to the left.	
+func (n *Node) rotateRightLeft() *Node {
+	n.Right = n.Right.rotateRight()
+	n = n.rotateLeft()
+	n.height = max(n.Left.Height(), n.Right.Height()) + 1
+	return n
+}
+
+rotateLeftRight first rotates the left child of c to the left, then c to the right.	
+func (n *Node) rotateLeftRight() *Node {
+	n.Left = n.Left.rotateLeft()
+	n = n.rotateRight()
+	n.height = max(n.Left.Height(), n.Right.Height()) + 1
+	return n
+}
+
+rebalance brings the (sub-)tree with root node c back into a balanced state.	
+func (n *Node) rebalance() *Node {
+	fmt.Println("rebalance " + n.Value)
+	n.Dump(0, "")
+	switch {
+Left subtree is too high, and left child has a left child.	
+	case n.Bal() < -1 && n.Left.Bal() == -1:
+		return n.rotateRight()
+Right subtree is too high, and right child has a right child.	
+	case n.Bal() > 1 && n.Right.Bal() == 1:
+		return n.rotateLeft()
+Left subtree is too high, and left child has a right child.	
+	case n.Bal() < -1 && n.Left.Bal() == 1:
+		return n.rotateLeftRight()
+Right subtree is too high, and right child has a left child.	
+	case n.Bal() > 1 && n.Right.Bal() == -1:
+		return n.rotateRightLeft()
+	}
+	return n
+}
