@@ -1,3 +1,14 @@
+func (n *Node) Bal() int {
+	return n.Right.Height() - n.Left.Height()
+}
+
+func (n *Node) Height() int {
+	if n == nil {
+		return 0
+	}
+	return n.height
+}
+
 func (n *Node) rotateLeft() *Node {
 	fmt.Println("rotateLeft " + n.Value)
 Save n’s right child in r.	
